@@ -1,7 +1,54 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import mockFetchShow from '../../api/fetchShow';
+import Display from './../Display';
+
+jest.mock("../../api/fetchShow");
+
+const displayFunc = jest.fn();
+
+const testShow = {
+    //add in approprate test data structure here.
+    name: 'test show',
+    summary: 'summary of test show',
+    seasons: [
+        {id: 1, name: 'season 1', episodes:[]},
+        {id: 2, name: 'season 2', episodes:[]},
+        {id: 3, name: 'season 3', episodes:[]},
+    ]
+}
+
+test('renders Display without any passed in props', () => {
+    render(<Display />)
+})
 
 
+test('when fetch button is pressed show cmopoennt renders', async () => {
+    mockFetchShow.mockResolvedValueOnce(testShow);
+    render(<Display />)
+    const button = screen.queryByRole('button');
+    userEvent.click(button);
 
+    await waitFor(() => {
+        expect(screen.getByTestId('show-container')).toBeInTheDocument()
+    })
 
+    const dropDown = screen.getByRole('combobox')
+    userEvent.click(dropDown)
+    expect(dropDown).toHaveLength(4)
+})
+
+test('when displayFun is passed as props that it renders when fetch button is clicked', async () => {
+    render(<Display />)
+    expect(displayFunc).not.toBeCalled()
+    const button = screen.queryByRole('button');
+    userEvent.click(button);
+
+    await waitFor(() => {
+        expect(displayFunc).toHaveBeenCalled();
+    })
+})
 
 
 
