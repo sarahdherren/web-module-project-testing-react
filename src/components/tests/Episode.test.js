@@ -5,27 +5,36 @@ import Episode from './../Episode';
 const testEpisode = {
     id:1,
     name: "",
-    image: "http://static.tvmaze.com/uploads/images/medium_landscape/67/168918.jpg",
+    //image: "http://static.tvmaze.com/uploads/images/medium_landscape/67/168918.jpg",
+    image: null,
     season: 1,
     number: 1,
-    summary: "",
+    summary: "This is a summary statement about this specific episode",
     runtime: 1
 }
 
 const testEpisodeWithoutImage = {
     //Add in approprate test data structure here.
 }
-
+//sanity check
 test("renders without error", () => {
+    render(<Episode episode={testEpisode} />)
 
 });
 
-test("renders the summury test passed as prop", ()=>{
+test("renders the summary test passed as prop", ()=>{
+    render(<Episode episode={testEpisode} />)
+    const summary = screen.queryByText(/This is a summary statement about this specific episode/i)
+    expect(summary).not.toBeNull()
+    expect(summary).toBeInTheDocument()
+    expect(summary).toBeVisible()
     
 });
 
 test("renders default image when image is not defined", ()=>{
-    
+    render(<Episode episode={testEpisode} />)
+    const image = screen.queryByRole('img') 
+    expect(image.src).toContain('stranger_things');
 })
 
 //Tasks
